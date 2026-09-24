@@ -1,7 +1,6 @@
 # pka-rename
 
-Rename the user profile embedded inside a Cisco Packet Tracer `.pka` / `.pkt`
-activity file, without Packet Tracer noticing.
+Rename the user profile embedded inside a Cisco Packet Tracer `.pka` / `.pkt` activity file.
 
 ```
 $ ./pka_rename.py "6.2.4 Packet Tracer - Configure EtherChannel.pka" "Lucas Lowe"
@@ -32,6 +31,27 @@ Then run through the venv:
 ```sh
 .venv/bin/python pka_rename.py <file.pka> "New Name"
 ```
+
+## Layout
+
+```
+pka_rename.py       executable entry point (thin wrapper -> pka.cli)
+requirements.txt    twofish
+pka/
+├── cli.py          argument parsing, backup/verify/atomic-write logic
+├── constants.py    Packet Tracer magic values: key byte 0x89, nonce byte 0x10
+├── ptfile.py       file pipeline: XOR stages, qCompress, EAX glue
+├── profile.py      <USER_PROFILE><NAME> extraction and renaming
+└── crypto/
+    ├── util.py     128-bit block size + shared byte helpers
+    ├── cmac.py     CMAC (NIST SP 800-38B)
+    ├── ctr.py      CTR counter mode
+    └── eax.py      EAX authenticated encryption (OMAC0..2 + CTR)
+```
+
+The Twofish cipher comes from the `twofish` library; the CMAC / CTR / EAX
+modes live in `pka/crypto/` because no mainstream crypto library ships EAX
+over Twofish.
 
 ## Usage
 
@@ -72,9 +92,7 @@ Packet Tracer does not store plain XML on disk. A `.pka` file is:
 The script reverses the pipeline, replaces every
 `<USER_PROFILE><NAME>...</NAME>` occurrence in the XML (activities embed
 several copies of the workspace - initial network, answer network, activity -
-each carrying its own profile), then re-applies it. The Twofish cipher comes
-from the `twofish` library; CMAC / CTR / EAX modes are implemented here
-because no mainstream crypto library ships EAX over Twofish.
+each carrying its own profile), then re-applies it.
 
 ## Credits & disclaimer
 
@@ -83,4 +101,4 @@ Format knowledge comes from the reverse-engineering work in
 [strykey/pka-decipher](https://github.com/strykey/pka-decipher). The Twofish
 constants (key/nonce) and pipeline description originate from those projects.
 
-For educational use on your own files only.
+For educational use on your own files only ;).
