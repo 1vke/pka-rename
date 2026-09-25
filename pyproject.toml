@@ -4,19 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pka-rename"
-version = "1.0.0"
-description = "Rename the user profile embedded inside Cisco Packet Tracer .pka/.pkt files"
+version = "1.1.0"
+description = "Edit the user profile embedded inside a Cisco Packet Tracer `.pka` / `.pkt` activity file."
 readme = "README.md"
 authors = [{ name = "Lucas Lowe" }]
-# twofish needs `imp`, removed in Python 3.12
 requires-python = ">=3.9,<3.12"
-dependencies = ["twofish"]
+dependencies = ["twofish==0.3.0"]
 keywords = ["packet-tracer", "pka", "pkt", "twofish", "cisco", "networking"]
 classifiers = [
     "Environment :: Console",
-    "Intended Audience :: Education",
     "Topic :: Security :: Cryptography",
-    "Topic :: System :: Networking",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
