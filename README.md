@@ -3,7 +3,7 @@
 > [!WARNING]
 > Use on your own files, provided as-is with no warranty.
 
-Rename the user profile embedded inside a Cisco Packet Tracer `.pka` / `.pkt` activity file.
+Edit the user profile (name, email, additional info) embedded inside a Cisco Packet Tracer `.pka` / `.pkt` activity file.
 
 ```
 $ pka-rename "assignment.pka" "Keith Farrelle Cozart"
@@ -47,16 +47,22 @@ Re-run the `pipx install` command after pulling source changes. Uninstall with `
 ## Usage
 
 ```
-usage: pka-rename [-h] [-o OUTPUT] [--no-backup] pka_file new_name
+usage: pka-rename [-h] [--email EMAIL] [--info INFO] [-o OUTPUT] [--no-backup]
+                  pka_file [new_name]
+
+Edit the user profile embedded in a Cisco Packet Tracer .pka/.pkt activity
+file (decrypt -> patch -> re-encrypt).
 
 positional arguments:
   pka_file    the .pka or .pkt file to patch
   new_name    new profile name (replaces the current one)
 
 options:
-  -h, --help  show this help message and exit
-  -o OUTPUT   write result to this path instead of editing in place
-  --no-backup do not keep a .bak copy when editing in place
+  --email EMAIL   new profile email (optional edit)
+  --info INFO     new profile additional info (optional edit)
+  -o OUTPUT, --output OUTPUT
+                  write result to this path instead of editing in place
+  --no-backup     do not keep a .bak copy when editing in place
 ```
 
 ## How it works
@@ -74,7 +80,7 @@ A `.pka` file is really just an XML file, however Packet Tracer does not store p
 | EAX          | Twofish-128, key `0x89 * 16`, nonce `0x10 * 16`, 16-byte tag appended last |
 | Stage 1      | byte-reverse the buffer, XOR with `(L - i*L) & 0xFF` — scramble |
 
-The script reverses the pipeline, replaces every `<USER_PROFILE><NAME>...</NAME>` occurrence in the XML (activities embed several copies of the workspace - initial network, answer network, activity - each carrying its own profile), then re-applies it.
+The script reverses the pipeline, replaces the requested `<USER_PROFILE>` field values - `NAME`, `EMAIL`, `ADDITIONAL_INFO` (activities embed several copies of the workspace - initial network, answer network, activity - each carrying its own profile) - then re-applies it.
 
 ## Credits
 
@@ -82,4 +88,4 @@ Reverse engineering knowledge from [mircodz/pka2xml](https://github.com/mircodz/
 
 ## AI disclaimer
 
-This was mostly made using GLM 5.3 Flash with a small amount of human intervention in like 15 minutes or so; this really was a quick experiment to test the model out. With that being said, take this work with a grain of salt.
+This was mostly made using GLM 5.3 Flash with a small amount of human intervention; this really was a quick experiment to test the model out. With that being said, take this work with a grain of salt.

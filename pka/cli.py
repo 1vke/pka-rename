@@ -1,5 +1,3 @@
-"""Command line interface for pka-rename."""
-
 import argparse
 import os
 import shutil
@@ -9,7 +7,8 @@ import zlib
 try:
     from pka.crypto import AuthenticationError
     from pka.ptfile import decrypt_pka, encrypt_pka
-    from pka.profile import rename_profile
+    from pka.profile import (edit_profile_name, edit_profile_email,
+                            edit_profile_info)
 except ImportError as e:
     print(f"error: missing dependency ({e.name}) - set up the project venv:\n"
           "  python3.11 -m venv .venv\n"
@@ -33,10 +32,13 @@ class CliError(Exception):
 
 def build_parser():
     ap = argparse.ArgumentParser(
-        description="Rename the user profile embedded in a Cisco Packet Tracer "
+        description="Edit the user profile embedded in a Cisco Packet Tracer "
                     ".pka/.pkt activity file (decrypt -> patch -> re-encrypt).")
     ap.add_argument("pka_file", help="the .pka or .pkt file to patch")
-    ap.add_argument("new_name", help="new profile name (replaces the current one)")
+    ap.add_argument("new_name", nargs="?", default=None,
+                    help="new profile name (replaces the current one)")
+    ap.add_argument("--email", help="new profile email (optional edit)")
+    ap.add_argument("--info", help="new profile additional info (optional edit)")
     ap.add_argument("-o", "--output",
                     help="write result to this path instead of editing in place")
     ap.add_argument("--no-backup", action="store_true",
@@ -64,22 +66,25 @@ def decrypt_source(raw):
     print(f"  decrypted XML: {len(xml):,} bytes")
     return xml
 
-def apply_profile_edits(xml, new_name):
-    """Apply the requested profile edits to the decrypted XML.
+def apply_profile_edits(xml, new_name=None, new_email=None, new_info=None):
+    """Apply the requested profile edits"""
+    requested = [(label, editor, value) for label, editor, value in
+                 (("profile name", edit_profile_name, new_name),
+                  ("profile email", edit_profile_email, new_email),
+                  ("profile additional info", edit_profile_info, new_info))
+                 if value is not None]
 
-    Extension point: future edits (profile email, info fields, ...) slot in
-    here as additional steps against the same decrypted XML, so the
-    decrypt/encrypt/verify pipeline around them stays untouched.
-    """
-    try:
-        xml_new, old_names = rename_profile(xml, new_name)
-    except ValueError as e:
-        raise CliError(str(e), EXIT_PATCH_ERROR)
+    xml_new = xml
+    for label, editor, value in requested:
+        try:
+            xml_new, old_values = editor(xml_new, value)
+        except ValueError as e:
+            raise CliError(str(e), EXIT_PATCH_ERROR)
 
-    uniq_old = sorted(set(old_names))
-    print(f"  {len(old_names)} profile block(s) found: "
-          f"{', '.join(repr(n) for n in uniq_old)}")
-    print(f"  -> renaming to {new_name!r}")
+        uniq_old = sorted(set(old_values))
+        print(f"  {len(old_values)} {label} block(s) found: "
+              f"{', '.join(repr(v) for v in uniq_old)}")
+        print(f"  -> setting {label} to {value!r}")
     return xml_new
 
 def encrypt_and_verify(xml):
@@ -109,9 +114,13 @@ def write_output(src, out, output=None, no_backup=False):
 
 def run(args):
     """Map parsed CLI arguments onto the patch pipeline and execute it."""
+    if args.new_name is None and args.email is None and args.info is None:
+        raise CliError("nothing to edit: pass a new name and/or --email/--info",
+                       EXIT_INPUT_ERROR)
     raw = read_source(args.pka_file)
     xml = decrypt_source(raw)
-    xml_new = apply_profile_edits(xml, args.new_name)
+    xml_new = apply_profile_edits(xml, new_name=args.new_name,
+                                  new_email=args.email, new_info=args.info)
     out = encrypt_and_verify(xml_new)
     write_output(args.pka_file, out, output=args.output, no_backup=args.no_backup)
     return EXIT_OK
