@@ -14,19 +14,40 @@ re-encrypting ...
 done: 6.2.4 Packet Tracer - Configure EtherChannel.pka (662,132 bytes)
 ```
 
-## Setup
+## Install
 
-The script needs the [`twofish`](https://pypi.org/project/twofish/) package,
-which is a ctypes bridge to a C Twofish implementation. That package still
-imports the `imp` module, so it needs **Python <= 3.11** (e.g.
-`/opt/homebrew/bin/python3.11` on an Apple Silicon Mac with Homebrew):
+`pka-rename` is packaged with a `pyproject.toml` console-script entry point,
+so once installed the `pka-rename` command works from any directory.
+
+### As a CLI app (pipx, recommended)
+
+The [`twofish`](https://pypi.org/project/twofish/) dependency still imports
+the removed `imp` module, so the app must run on **Python <= 3.11** - pass
+it explicitly to pipx:
+
+```sh
+brew install pipx            # if not already installed
+pipx ensurepath              # puts ~/.local/bin on PATH (re-login after)
+pipx install --python /opt/homebrew/bin/python3.11 /path/to/pka-rename
+```
+
+Then, from anywhere:
+
+```sh
+pka-rename <file.pka> "New Name"
+```
+
+Uninstall with `pipx uninstall pka-rename`.
+
+### Development install
 
 ```sh
 python3.11 -m venv .venv
 .venv/bin/pip install -r requirements.txt
+.venv/bin/pip install -e .          # adds .venv/bin/pka-rename
 ```
 
-Then run through the venv:
+Or run straight from the source tree without installing:
 
 ```sh
 .venv/bin/python pka_rename.py <file.pka> "New Name"

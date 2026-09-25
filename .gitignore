@@ -1,5 +1,9 @@
+.gitignore
 .venv/
 __pycache__/
 *.pyc
 *.bak
 *.tmp
+build/
+dist/
+*.egg-info/

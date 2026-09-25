@@ -20,7 +20,6 @@ except ImportError as e:
 
 def build_parser():
     ap = argparse.ArgumentParser(
-        prog="pka_rename.py",
         description="Rename the user profile embedded in a Cisco Packet Tracer "
                     ".pka/.pkt activity file (decrypt -> patch -> re-encrypt).")
     ap.add_argument("pka_file", help="the .pka or .pkt file to patch")
