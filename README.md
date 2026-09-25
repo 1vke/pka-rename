@@ -6,7 +6,7 @@
 Rename the user profile embedded inside a Cisco Packet Tracer `.pka` / `.pkt` activity file.
 
 ```
-$ pka-rename "assignment.pka" "Keith Farrelle Cozart "
+$ pka-rename "assignment.pka" "Keith Farrelle Cozart"
 reading assignment.pka ...
   decrypted XML: 8,262,162 bytes
   3 profile block(s) found: 'Guest'
