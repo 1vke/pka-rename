@@ -3,7 +3,7 @@
 Rename the user profile embedded inside a Cisco Packet Tracer `.pka` / `.pkt` activity file.
 
 ```
-$ pka-rename "assignment.pka" "Kieth Cozart"
+$ pka-rename "assignment.pka" "Keith Farrelle Cozart "
 reading assignment.pka ...
   decrypted XML: 8,262,162 bytes
   3 profile block(s) found: 'Guest'
@@ -16,16 +16,14 @@ done: assignment.pka (662,132 bytes)
 
 ## Requirements
 
-- Python 3.9 - 3.11 (tested on 3.11): the `twofish` dependency still imports
-  the `imp` module, removed in Python 3.12
+- Python 3.9 - 3.11 (tested on 3.11)
 - [pipx](https://pipx.pypa.io/) for the install below (on macOS: `brew install pipx`)
-- Cisco Packet Tracer `.pka` / `.pkt` activity files - the file format is
-  unchanged from PT 7.x through 9.x (tested against 9.0.1)
+- Cisco Packet Tracer `.pka` / `.pkt` activity files
+	- the file format is unchanged from PT 7.x through 9.x (tested against 9.0.1)
 
 ## Install
 
-Clone the repo, then install with pipx (isolated venv, command available
-from anywhere):
+Clone the repo, then install with pipx (isolated venv, command available from anywhere):
 
 ```sh
 git clone <repo-url>
@@ -33,8 +31,7 @@ cd pka-rename
 pipx install --python /opt/homebrew/bin/python3.11 .
 ```
 
-If pipx is new to the machine: `brew install pipx`, then `pipx ensurepath`
-and re-login so `~/.local/bin` is on PATH.
+If pipx is new to the machine: `brew install pipx`, then `pipx ensurepath` and re-login so `~/.local/bin` is on PATH.
 
 Then, from anywhere:
 
@@ -42,8 +39,17 @@ Then, from anywhere:
 pka-rename <file.pka> "New Name"
 ```
 
-Re-run the `pipx install` command after pulling source changes.
-Uninstall with `pipx uninstall pka-rename`.
+Re-run the `pipx install` command after pulling source changes. Uninstall with `pipx uninstall pka-rename`.
+
+Or with a plain venv, no pipx:
+
+```sh
+python3.11 -m venv .venv
+.venv/bin/pip install .
+.venv/bin/pka-rename <file.pka> "New Name"
+```
+
+`.venv/bin/pka-rename` works from anywhere by full path, or `source .venv/bin/activate` to get `pka-rename` on PATH for the current shell.
 
 ## Usage
 
@@ -59,8 +65,6 @@ options:
   -o OUTPUT   write result to this path instead of editing in place
   --no-backup do not keep a .bak copy when editing in place
 ```
-
-Defaults are safe: the file is edited in place only after a full round-trip verification (the re-encrypted output is decrypted again and must match the patched XML exactly, including the EAX authentication tag). A `.bak` copy of the original is kept unless `--no-backup` is given, and the write itself is atomic (`.tmp` + rename).
 
 ## How it works
 
