@@ -1,5 +1,8 @@
 # pka-rename
 
+> [!WARNING]
+> Use on your own files, provided as-is with no warranty.
+
 Rename the user profile embedded inside a Cisco Packet Tracer `.pka` / `.pkt` activity file.
 
 ```
