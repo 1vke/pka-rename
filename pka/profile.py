@@ -8,11 +8,9 @@ from xml.sax.saxutils import escape
 # scoped to those blocks because <NAME> appears elsewhere in the XML.
 PROFILE_RE = re.compile(rb'(<USER_PROFILE>\s*<NAME>)([^<]*)(</NAME>)')
 
-
 def find_profiles(xml):
     """Current profile names, one per embedded workspace copy."""
     return [m[1].decode("utf-8", "replace") for m in PROFILE_RE.findall(xml)]
-
 
 def rename_profile(xml, new_name):
     """Replace every profile name. Returns (patched_xml, old_names)."""

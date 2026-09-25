@@ -7,7 +7,7 @@ $ pka-rename "assignment.pka" "Keith Farrelle Cozart "
 reading assignment.pka ...
   decrypted XML: 8,262,162 bytes
   3 profile block(s) found: 'Guest'
-  -> renaming to 'Kieth Cozart'
+  -> renaming to 'Keith Farrelle Cozart'
 re-encrypting ...
   verified: re-decrypts cleanly with valid EAX tag
   backup written: assignment.pka.bak
@@ -21,7 +21,7 @@ done: assignment.pka (662,132 bytes)
 - Cisco Packet Tracer `.pka` / `.pkt` activity files
 	- the file format is unchanged from PT 7.x through 9.x (tested against 9.0.1)
 
-## Install
+## Install (macOS)
 
 Clone the repo, then install with pipx (isolated venv, command available from anywhere):
 
@@ -41,16 +41,6 @@ pka-rename <file.pka> "New Name"
 
 Re-run the `pipx install` command after pulling source changes. Uninstall with `pipx uninstall pka-rename`.
 
-Or with a plain venv, no pipx:
-
-```sh
-python3.11 -m venv .venv
-.venv/bin/pip install .
-.venv/bin/pka-rename <file.pka> "New Name"
-```
-
-`.venv/bin/pka-rename` works from anywhere by full path, or `source .venv/bin/activate` to get `pka-rename` on PATH for the current shell.
-
 ## Usage
 
 ```
@@ -68,7 +58,7 @@ options:
 
 ## How it works
 
-Packet Tracer does not store plain XML on disk. A `.pka` file is:
+A `.pka` file is really just an XML file, however Packet Tracer does not store plain XML on disk. A `.pka` file is:
 
 ```
 .pka bytes = Stage1-obfuscate( Twofish-EAX( Stage2-obfuscate( qCompress(xml) ) ) )
@@ -85,4 +75,8 @@ The script reverses the pipeline, replaces every `<USER_PROFILE><NAME>...</NAME>
 
 ## Credits
 
-Format knowledge from [mircodz/pka2xml](https://github.com/mircodz/pka2xml) and [strykey/pka-decipher](https://github.com/strykey/pka-decipher).
+Reverse engineering knowledge from [mircodz/pka2xml](https://github.com/mircodz/pka2xml) and [strykey/pka-decipher](https://github.com/strykey/pka-decipher).
+
+## AI disclaimer
+
+This was mostly made using GLM 5.3 Flash with a small amount of human intervention in like 15 minutes or so; this really was a quick experiment to test the model out. With that being said, take this work with a grain of salt.

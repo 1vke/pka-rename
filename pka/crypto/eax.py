@@ -9,15 +9,12 @@ OMAC_PREFIX_NONCE = 0x00  # doubles as the CTR starting counter
 OMAC_PREFIX_AAD = 0x01
 OMAC_PREFIX_DATA = 0x02
 
-
 class AuthenticationError(ValueError):
     """EAX tag mismatch during decryption."""
-
 
 def _omac_with_prefix(cmac, prefix, data):
     prefix_block = bytes([prefix]).rjust(BLOCK_SIZE, b"\x00")
     return cmac.digest(prefix_block + data)
-
 
 class EAX:
     def __init__(self, encrypt_block):

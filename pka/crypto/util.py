@@ -2,10 +2,8 @@
 
 BLOCK_SIZE = 16
 
-
 def xor_bytes(a, b):
     return bytes(x ^ y for x, y in zip(a, b))
-
 
 def left_shift_one(data):
     out = bytearray(len(data))

@@ -8,7 +8,6 @@ CONST_RB = 0x87
 MSB_MASK = 0x80
 PAD_BYTE = 0x80
 
-
 def generate_subkeys(encrypt_block):
     L = encrypt_block(bytes(BLOCK_SIZE))
 
@@ -22,11 +21,9 @@ def generate_subkeys(encrypt_block):
 
     return K1, K2
 
-
 def pad(block):
     padded = block + bytes([PAD_BYTE])
     return padded.ljust(BLOCK_SIZE, b"\x00")
-
 
 class CMAC:
     def __init__(self, encrypt_block):

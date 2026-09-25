@@ -17,7 +17,6 @@ except ImportError as e:
           file=sys.stderr)
     sys.exit(1)
 
-
 def build_parser():
     ap = argparse.ArgumentParser(
         description="Rename the user profile embedded in a Cisco Packet Tracer "
@@ -29,7 +28,6 @@ def build_parser():
     ap.add_argument("--no-backup", action="store_true",
                     help="do not keep a .bak copy when editing in place")
     return ap
-
 
 def main(argv=None):
     args = build_parser().parse_args(argv)

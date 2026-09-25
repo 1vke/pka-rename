@@ -2,14 +2,12 @@
 
 from pka.crypto.util import BLOCK_SIZE
 
-
 def inc_counter_be(counter):
     # big-endian increment, matching Crypto++
     for i in range(BLOCK_SIZE - 1, -1, -1):
         counter[i] = (counter[i] + 1) & 0xFF
         if counter[i] != 0:
             break
-
 
 class CTR:
     def __init__(self, encrypt_block, initial_counter):
