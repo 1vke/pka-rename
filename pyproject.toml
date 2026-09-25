@@ -8,8 +8,7 @@ version = "1.0.0"
 description = "Rename the user profile embedded inside Cisco Packet Tracer .pka/.pkt files"
 readme = "README.md"
 authors = [{ name = "Lucas Lowe" }]
-# the `twofish` dependency still imports the removed `imp` module,
-# so this tool cannot run on Python 3.12+
+# twofish needs `imp`, removed in Python 3.12
 requires-python = ">=3.9,<3.12"
 dependencies = ["twofish"]
 keywords = ["packet-tracer", "pka", "pkt", "twofish", "cisco", "networking"]
@@ -23,11 +22,6 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
 ]
-
-[project.urls]
-# format reference implementations this tool is based on
-Homepage = "https://github.com/mircodz/pka2xml"
-Repository = "https://github.com/strykey/pka-decipher"
 
 [project.scripts]
 pka-rename = "pka.cli:main"

@@ -115,11 +115,7 @@ The script reverses the pipeline, replaces every
 several copies of the workspace - initial network, answer network, activity -
 each carrying its own profile), then re-applies it.
 
-## Credits & disclaimer
+## Credits
 
-Format knowledge comes from the reverse-engineering work in
-[mircodz/pka2xml](https://github.com/mircodz/pka2xml) and
-[strykey/pka-decipher](https://github.com/strykey/pka-decipher). The Twofish
-constants (key/nonce) and pipeline description originate from those projects.
-
-For educational use on your own files only ;).
+Format knowledge from [mircodz/pka2xml](https://github.com/mircodz/pka2xml)
+and [strykey/pka-decipher](https://github.com/strykey/pka-decipher).

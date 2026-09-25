@@ -1,9 +1,4 @@
-"""Cipher work: CMAC, CTR and EAX modes over a 128-bit block cipher.
-
-The block cipher itself (Twofish) comes from the `twofish` package; these
-modules implement the modes of operation around it, because no mainstream
-crypto library ships EAX over Twofish.
-"""
+"""CMAC / CTR / EAX modes over the `twofish` library's 16-byte block cipher."""
 
 from pka.crypto.cmac import CMAC
 from pka.crypto.ctr import CTR

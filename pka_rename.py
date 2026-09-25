@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Executable entry point - see pka/cli.py and README.md."""
+"""CLI entry point."""
 
 import sys
 

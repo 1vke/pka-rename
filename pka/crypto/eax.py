@@ -1,26 +1,17 @@
-"""EAX authenticated encryption (Bellare, Rogaway, Wagner) built from
-CMAC and CTR over a 16-byte block cipher.
-
-Tag = OMAC_0(nonce) ^ OMAC_1(aad) ^ OMAC_2(ciphertext), where OMAC_n
-means CMAC over a message prefixed with a single domain-separation byte.
-The OMAC_0 output doubles as the CTR starting counter.
-"""
+"""EAX authenticated encryption: tag = OMAC0(nonce) ^ OMAC1(aad) ^ OMAC2(ciphertext)."""
 
 from pka.crypto.cmac import CMAC
 from pka.crypto.ctr import CTR
 from pka.crypto.util import BLOCK_SIZE, xor_bytes
 
-# OMAC domain-separation prefixes: the message fed to CMAC is 15 zero bytes
-# followed by one of these, so the three MAC computations cannot collide.
-OMAC_PREFIX_NONCE = 0x00  # over the nonce    -> CTR starting counter
-OMAC_PREFIX_AAD = 0x01    # over the header   -> header tag
-OMAC_PREFIX_DATA = 0x02   # over the payload  -> ciphertext tag
-
-TAG_SIZE = BLOCK_SIZE
+# Domain-separation prefixes for the three OMAC computations.
+OMAC_PREFIX_NONCE = 0x00  # doubles as the CTR starting counter
+OMAC_PREFIX_AAD = 0x01
+OMAC_PREFIX_DATA = 0x02
 
 
 class AuthenticationError(ValueError):
-    """Raised when an EAX tag does not match during decryption."""
+    """EAX tag mismatch during decryption."""
 
 
 def _omac_with_prefix(cmac, prefix, data):
@@ -30,7 +21,6 @@ def _omac_with_prefix(cmac, prefix, data):
 
 class EAX:
     def __init__(self, encrypt_block):
-        """`encrypt_block` must be a callable: 16 bytes in -> 16 bytes out."""
         self.encrypt_block = encrypt_block
         self.cmac = CMAC(encrypt_block)
 

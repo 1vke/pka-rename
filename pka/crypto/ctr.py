@@ -1,10 +1,10 @@
-"""CTR (counter) mode for stream encryption over any 16-byte block cipher."""
+"""CTR mode over a 16-byte block cipher."""
 
 from pka.crypto.util import BLOCK_SIZE
 
 
 def inc_counter_be(counter):
-    """Increment a 128-bit big-endian counter (same convention as Crypto++)."""
+    # big-endian increment, matching Crypto++
     for i in range(BLOCK_SIZE - 1, -1, -1):
         counter[i] = (counter[i] + 1) & 0xFF
         if counter[i] != 0:
@@ -19,8 +19,6 @@ class CTR:
         self.counter = bytearray(initial_counter)
 
     def process(self, data):
-        """XOR `data` with the keystream (encrypt and decrypt are the same
-        operation, since the counter mode is a stream cipher)."""
         out = bytearray()
         offset = 0
         while offset < len(data):

@@ -68,7 +68,6 @@ def main(argv=None):
     print("re-encrypting ...")
     out = encrypt_pka(xml_new)
 
-    # verify before writing anything
     if decrypt_pka(out) != xml_new:
         print("error: round-trip verification failed, file not modified",
               file=sys.stderr)
